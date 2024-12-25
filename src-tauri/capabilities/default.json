@@ -1,0 +1,26 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "sql:default",
+    "sql:allow-load",
+    "sql:allow-close",
+    "sql:allow-execute",
+    "sql:allow-select",
+    "accent-color:allow-get-accent-color",
+    "core:window:allow-start-dragging",
+    "core:window:allow-start-resize-dragging",
+    "core:window:allow-toggle-maximize",
+    "fs:allow-app-read",
+    "fs:allow-appdata-read",
+    "fs:write-all",
+    "fs:write-files",
+    "fs:allow-download-write",
+    "fs:default",
+    "dialog:default"
+  ]
+}
