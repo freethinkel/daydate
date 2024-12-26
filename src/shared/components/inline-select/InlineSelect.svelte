@@ -47,8 +47,8 @@
     {/each}
     <div
       class="indicator"
-      style:--left="{$left}px"
-      style:--width="{$width}px"
+      style:--left="{left.current}px"
+      style:--width="{width.current}px"
     ></div>
   </div>
 </div>
