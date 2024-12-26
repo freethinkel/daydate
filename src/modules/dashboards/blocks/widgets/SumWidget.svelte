@@ -4,10 +4,19 @@
   import { formatAmount } from "@/shared/helpers/number-formatter";
   import { settingsModel } from "@/model";
 
-  export let currentMonthSum = 0;
-  export let prevMonthSum = 0;
-  export let title = "";
-  export let swapArrows = false;
+  interface Props {
+    currentMonthSum?: number;
+    prevMonthSum?: number;
+    title?: string;
+    swapArrows?: boolean;
+  }
+
+  let {
+    currentMonthSum = 0,
+    prevMonthSum = 0,
+    title = "",
+    swapArrows = false
+  }: Props = $props();
 
   const settings = settingsModel.$settings;
   const currency = $settings.currency;

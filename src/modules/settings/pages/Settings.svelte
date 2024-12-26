@@ -24,7 +24,7 @@
       placeholder="Enter currency"
       onChange={(value) => change("currency", value)}
     />
-    <Button on:click={() => settingsModel.startBackup()}>Backup</Button>
+    <Button onClick={() => settingsModel.startBackup()}>Backup</Button>
   </div>
 </PageWrapper>
 

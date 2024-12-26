@@ -4,13 +4,13 @@
 
   const transactions = transactionsModel.$transactions;
   const prevMonthTransactions = transactionsModel.$prevMonthTransactions;
-  $: sum = $transactions
+  let sum = $derived($transactions
     .filter((transaction) => transaction.amount > 0)
-    .reduce((acc, curr) => acc + curr.amount, 0);
+    .reduce((acc, curr) => acc + curr.amount, 0));
 
-  $: prevMonthSum = $prevMonthTransactions
+  let prevMonthSum = $derived($prevMonthTransactions
     .filter((transaction) => transaction.amount > 0)
-    .reduce((acc, curr) => acc + curr.amount, 0);
+    .reduce((acc, curr) => acc + curr.amount, 0));
 </script>
 
 <SumWidget

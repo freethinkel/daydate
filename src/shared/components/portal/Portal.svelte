@@ -1,28 +1,34 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	let ref: HTMLDivElement;
-	let portal: HTMLDivElement;
+  import { onMount, onDestroy, type Snippet } from "svelte";
 
-	onMount(() => {
-		portal = document.createElement('div');
-		portal.className = 'portal';
-		document.body.appendChild(portal);
-		portal.appendChild(ref);
-	});
+  interface Props {
+    children?: Snippet;
+  }
 
-	onDestroy(() => {
-		document.body.removeChild(portal);
-	});
+  let { children }: Props = $props();
+  let ref: HTMLDivElement;
+  let portal: HTMLDivElement;
+
+  onMount(() => {
+    portal = document.createElement("div");
+    portal.className = "portal";
+    document.body.appendChild(portal);
+    portal.appendChild(ref);
+  });
+
+  onDestroy(() => {
+    document.body.removeChild(portal);
+  });
 </script>
 
 <div class="portal-clone">
-	<div bind:this={ref}>
-		<slot></slot>
-	</div>
+  <div bind:this={ref}>
+    {@render children?.()}
+  </div>
 </div>
 
 <style>
-	.portal-clone {
-		display: none;
-	}
+  .portal-clone {
+    display: none;
+  }
 </style>

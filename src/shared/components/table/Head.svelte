@@ -1,16 +1,23 @@
 <script lang="ts">
-	export let align: 'left' | 'right' = 'left';
-	export let width = 'auto';
+  import type { Snippet } from "svelte";
+
+  interface Props {
+    align?: "left" | "right";
+    width?: string;
+    children?: Snippet;
+  }
+
+  let { align = "left", width = "auto", children }: Props = $props();
 </script>
 
 <th style:text-align={align} style:width>
-	<slot />
+  {@render children?.()}
 </th>
 
 <style>
-	th {
-		color: var(--color-title);
-		padding: var(--cell-padding);
-		text-align: left;
-	}
+  th {
+    color: var(--color-title);
+    padding: var(--cell-padding);
+    text-align: left;
+  }
 </style>

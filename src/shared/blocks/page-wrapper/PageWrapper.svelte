@@ -1,11 +1,22 @@
-<div class="wrapper" class:with-header={$$slots.header}>
-  {#if $$slots.header}
+<script lang="ts">
+  import { type Snippet } from "svelte";
+
+  interface Props {
+    header?: Snippet;
+    children?: Snippet;
+  }
+
+  let { header, children }: Props = $props();
+</script>
+
+<div class="wrapper" class:with-header={header}>
+  {#if header}
     <div class="header" data-tauri-drag-region>
-      <slot name="header" />
+      {@render header?.()}
     </div>
   {/if}
   <div class="content">
-    <slot />
+    {@render children?.()}
   </div>
 </div>
 

@@ -8,7 +8,7 @@
 
   const budget = budgetModel.$budget;
   const settings = settingsModel.$settings;
-  $: sum = $budget.reduce((acc, curr) => acc + curr.amount, 0);
+  let sum = $derived($budget.reduce((acc, curr) => acc + curr.amount, 0));
 </script>
 
 <div class="wrapper">

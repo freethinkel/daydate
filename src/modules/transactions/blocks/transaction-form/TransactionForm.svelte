@@ -2,7 +2,6 @@
   import { Input } from "@/shared/components/input";
   import { Button } from "@/shared/components/button";
   import { transactionsModel } from "@/model";
-  import { createEventDispatcher } from "svelte";
   import { InlineSelect } from "@/shared/components/inline-select";
   import {
     formatAmount,
@@ -10,7 +9,10 @@
   } from "@/shared/helpers/number-formatter";
 
   const formValues = transactionsModel.$formValues;
-  const dispatch = createEventDispatcher();
+  type Props = {
+    onCreate: () => void;
+  };
+  const { onCreate }: Props = $props();
 
   const onSelect = (index: number) => {
     transactionsModel.handleChange({
@@ -22,9 +24,9 @@
 
 <form
   class="wrapper"
-  on:submit={() => {
+  onsubmit={() => {
     transactionsModel.handleSubmit();
-    dispatch("create");
+    onCreate();
   }}
 >
   <div class="form-group">
@@ -58,7 +60,7 @@
     <InlineSelect
       options={["Expense", "Income"]}
       selected={$formValues.type === "income" ? 1 : 0}
-      on:select={({ detail }) => onSelect(detail)}
+      onSelect={(tab) => onSelect(tab)}
     />
   </div>
   <div class="bottom">

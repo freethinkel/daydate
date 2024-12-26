@@ -8,12 +8,14 @@
 </script>
 
 <PageWrapper>
-  <div class="controls" slot="header">
-    <MonthPicker
-      value={$selectedMonth}
-      on:change={({ detail }) => appModel.selectMonth(detail)}
-    />
-  </div>
+  {#snippet header()}
+    <div class="controls">
+      <MonthPicker
+        value={$selectedMonth}
+        onChange={(month) => appModel.selectMonth(month)}
+      />
+    </div>
+  {/snippet}
 
   <div class="top">
     <TotalIncomeWidget />

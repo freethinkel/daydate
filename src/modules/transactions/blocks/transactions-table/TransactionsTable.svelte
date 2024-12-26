@@ -17,14 +17,18 @@
   const settings = settingsModel.$settings;
   const { deleteTransaction } = transactionsModel;
 
-  $: filteredTransactions = $transactions.filter((transaction) => {
-    if ($type === "all") return true;
-    return $type === "expense"
-      ? transaction.amount < 0
-      : transaction.amount > 0;
-  });
+  const filteredTransactions = $derived(
+    $transactions.filter((transaction) => {
+      if ($type === "all") return true;
+      return $type === "expense"
+        ? transaction.amount < 0
+        : transaction.amount > 0;
+    })
+  );
 
-  $: sum = filteredTransactions.reduce((acc, curr) => acc + curr.amount, 0);
+  const sum = $derived(
+    filteredTransactions.reduce((acc, curr) => acc + curr.amount, 0)
+  );
 
   const typeOptions = {
     all: "All",
@@ -42,7 +46,7 @@
     <InlineSelect
       options={Object.values(typeOptions)}
       selected={Object.keys(typeOptions).indexOf($type)}
-      on:select={({ detail }) => changeType(detail)}
+      onSelect={(tab) => changeType(tab)}
     />
   </div>
   <Table>
@@ -80,7 +84,7 @@
             <Button
               size="small"
               style="icon"
-              on:click={() => deleteTransaction(row.id)}
+              onClick={() => deleteTransaction(row.id)}
             >
               <Icon name="delete" size={16} />
             </Button>

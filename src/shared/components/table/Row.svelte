@@ -1,34 +1,56 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
+  import type { Snippet } from "svelte";
+  import { slide } from "svelte/transition";
 
-	export let interactive = false;
-	export let animated = false;
+  interface Props {
+    class?: string;
+    onClick?: () => void;
+    onBlur?: () => void;
+    onFocusout?: () => void;
+    onFocusin?: () => void;
+    onContextmenu?: () => void;
+    children?: Snippet;
+    animated?: boolean;
+    interactive?: boolean;
+  }
+
+  const {
+    class: className,
+    onBlur,
+    onClick,
+    onFocusout,
+    onFocusin,
+    onContextmenu,
+    children,
+    animated,
+    interactive,
+  }: Props = $props();
 </script>
 
 <tr
-	on:click
-	class={$$props.class}
-	class:interactive
-	on:blur
-	on:focusout
-	on:focusin
-	on:contextmenu
-	out:slide|local={{ duration: animated ? 300 : 0 }}
+  onclick={onClick}
+  class={className}
+  class:interactive
+  onblur={onBlur}
+  onfocusout={onFocusout}
+  onfocusin={onFocusin}
+  oncontextmenu={onContextmenu}
+  out:slide|local={{ duration: animated ? 300 : 0 }}
 >
-	<slot />
+  {@render children?.()}
 </tr>
 
 <style lang="postcss">
-	tr {
-	}
-	.interactive {
-		cursor: pointer;
+  tr {
+  }
+  .interactive {
+    cursor: pointer;
 
-		&:hover {
-			background: var(--color-hover);
-		}
-	}
-	:global(tbody) tr + tr {
-		border-top: 1px solid var(--color-separator);
-	}
+    &:hover {
+      background: var(--color-hover);
+    }
+  }
+  :global(tbody) tr + :global(tr) {
+    border-top: 1px solid var(--color-separator);
+  }
 </style>

@@ -1,5 +1,5 @@
 <script>
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { Icon } from "@/shared/components/icon";
   import { Button } from "../../components/button";
   import { goto } from "$app/navigation";
@@ -31,7 +31,7 @@
     {#each links as link}
       <a
         href={link.url}
-        class:active={$page.url.pathname === link.url}
+        class:active={page.url.pathname === link.url}
         style:--color={link.color}
       >
         <Icon name={link.icon} size={18} />
@@ -41,7 +41,7 @@
     {/each}
   </div>
   <div class="bottom">
-    <Button style="icon" on:click={() => goto("/settings")}>
+    <Button style="icon" onClick={() => goto("/settings")}>
       <Icon name="settings" />
     </Button>
   </div>

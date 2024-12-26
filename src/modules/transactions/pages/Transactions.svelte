@@ -10,37 +10,39 @@
 
   const selectedMonth = appModel.$selectedMonth;
 
-  let isTransactionsFormOpen = false;
+  let isTransactionsFormOpen = $state(false);
 </script>
 
 <PageWrapper>
-  <div class="controls" slot="header">
-    <MonthPicker
-      value={$selectedMonth}
-      on:change={({ detail }) => appModel.selectMonth(detail)}
-    />
-    <div class="controls__buttons">
-      <Button style="outline">
-        <Icon name="plus" />
-        Import from invoice
-      </Button>
+  {#snippet header()}
+    <div class="controls">
+      <MonthPicker
+        value={$selectedMonth}
+        onChange={(month) => appModel.selectMonth(month)}
+      />
+      <div class="controls__buttons">
+        <Button style="outline">
+          <Icon name="plus" />
+          Import from invoice
+        </Button>
 
-      <Button
-        on:click={() => (isTransactionsFormOpen = !isTransactionsFormOpen)}
-      >
-        <Icon name="plus" />
-        Add transaction
-      </Button>
+        <Button
+          onClick={() => (isTransactionsFormOpen = !isTransactionsFormOpen)}
+        >
+          <Icon name="plus" />
+          Add transaction
+        </Button>
+      </div>
     </div>
-  </div>
+  {/snippet}
   <TransactionsTable />
 
   {#if isTransactionsFormOpen}
     <Modal
-      on:close={() => (isTransactionsFormOpen = false)}
+      onClose={() => (isTransactionsFormOpen = false)}
       title="Create transaction"
     >
-      <TransactionForm on:create={() => (isTransactionsFormOpen = false)} />
+      <TransactionForm onCreate={() => (isTransactionsFormOpen = false)} />
     </Modal>
   {/if}
 </PageWrapper>
@@ -48,7 +50,7 @@
 <div class="mobile-controls">
   <Button
     style="filled_icon"
-    on:click={() => (isTransactionsFormOpen = !isTransactionsFormOpen)}
+    onClick={() => (isTransactionsFormOpen = !isTransactionsFormOpen)}
     size="large"
   >
     <Icon name="plus" />

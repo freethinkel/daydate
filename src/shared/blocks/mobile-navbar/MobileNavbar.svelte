@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { Icon } from "../../components/icon";
 
   const items = [
@@ -35,7 +35,7 @@
     <a
       type="button"
       class="navbar-button"
-      class:active={$page.url.pathname === item.url}
+      class:active={page.url.pathname === item.url}
       href={item.url}
       style:--color={item.color}
     >

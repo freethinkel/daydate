@@ -5,6 +5,11 @@
   import { onMount } from "svelte";
   import { budgetModel, settingsModel, transactionsModel } from "@/model";
   import { accentColor } from "tauri-plugin-accent-color";
+  interface Props {
+    children?: import('svelte').Snippet;
+  }
+
+  let { children }: Props = $props();
 
   onMount(() => {
     transactionsModel.loadTransactions();
@@ -25,7 +30,7 @@
   </div>
 
   <div class="content">
-    <slot />
+    {@render children?.()}
   </div>
   <div class="mobile-navbar">
     <MobileNavbar />

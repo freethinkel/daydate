@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  // import { createEventDispatcher, onMount } from 'svelte';
   type Props = {
     value: string;
     placeholder?: string;
@@ -19,21 +18,10 @@
     type = "text",
     onChange,
   }: Props = $props();
-  // export let value = '';
-  // export let placeholder = '';
-  // export let type: 'text' | 'number' = 'text';
-  // export let label = '';
-  // export let autofocus = false;
-  // export let autofocus = false;
-  // let inputRef: HTMLInputElement;
-  // let inputRef: HTMLInputElement;
-  // const dispatch = createEventDispatcher();
-  // const dispatch = createEventDispatcher();
   let inputRef: HTMLInputElement;
   const onInput = (event: Event) => {
     const target = event.target as HTMLInputElement;
     onChange?.(target.value);
-    // dispatch("change", target.value);
     target.value = value;
   };
 

@@ -14,23 +14,25 @@
   onMount(() => {
     budgetModel.loadBudget();
   });
-  let isOpen = false;
+  let isOpen = $state(false);
 </script>
 
 <PageWrapper>
-  <div class="controls" slot="header">
-    <MonthPicker
-      value={$selectedMonth}
-      on:change={({ detail }) => appModel.selectMonth(detail)}
-    />
-    <Button on:click={() => (isOpen = !isOpen)}>
-      <Icon name="plus" />
-      Add budget
-    </Button>
-  </div>
+  {#snippet header()}
+    <div class="controls">
+      <MonthPicker
+        value={$selectedMonth}
+        onChange={(month) => appModel.selectMonth(month)}
+      />
+      <Button onClick={() => (isOpen = !isOpen)}>
+        <Icon name="plus" />
+        Add budget
+      </Button>
+    </div>
+  {/snippet}
   <BudgetTable />
   {#if isOpen}
-    <Modal on:close={() => (isOpen = false)} title="Create budget">
+    <Modal onClose={() => (isOpen = false)} title="Create budget">
       <BudgetForm onCreate={() => (isOpen = false)} />
     </Modal>
   {/if}

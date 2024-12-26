@@ -1,9 +1,17 @@
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { createEventDispatcher, onDestroy, onMount } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import Portal from "svelte-portal";
   import { fade } from "svelte/transition";
-  export let title = "";
+
+  interface Props {
+    title?: string;
+    children?: Snippet;
+    onClose: () => void;
+    onClick?: () => void;
+  }
+
+  let { title = "", children, onClose, onClick }: Props = $props();
 
   onMount(() => {
     if (!browser) return;
@@ -14,26 +22,26 @@
     if (!browser) return;
     document.body.style.overflow = "";
   });
-
-  const dispatch = createEventDispatcher();
 </script>
 
 <Portal target="body">
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div
-    class="wrapper"
-    on:click={() => dispatch("close")}
-    transition:fade={{ duration: 100 }}
-  >
-    <div class="content" on:click|stopPropagation>
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="wrapper" onclick={onClose} transition:fade={{ duration: 100 }}>
+    <div
+      class="content"
+      onclick={(event) => {
+        event.stopPropagation();
+        onClick?.();
+      }}
+    >
       <div class="header">
         <h3 class="title">
           {title}
         </h3>
       </div>
       <div class="inner">
-        <slot />
+        {@render children?.()}
       </div>
     </div>
   </div>

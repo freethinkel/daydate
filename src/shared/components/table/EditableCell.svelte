@@ -1,62 +1,77 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import Cell from './Cell.svelte';
-	import InputCell from './InputCell.svelte';
+  import Cell from "./Cell.svelte";
+  import InputCell from "./InputCell.svelte";
 
-	export let pale = false;
-	export let colspan: number | undefined = undefined;
-	export let align: 'left' | 'right' = 'left';
-	export let value = '';
-	export let presentValue: string | undefined = undefined;
-	export let width: string = 'auto';
-	export let selectAll = false;
+  interface Props {
+    pale?: boolean;
+    colspan?: number | undefined;
+    align?: "left" | "right";
+    value?: string;
+    presentValue?: string | undefined;
+    width?: string;
+    selectAll?: boolean;
+    isEditing?: boolean;
+    onChange: (value: string) => void;
+    onFocusPrev: () => void;
+    onFocusNext: () => void;
+  }
 
-	export let isEditing = false;
-	let inputValue = value;
+  let {
+    pale = false,
+    colspan = undefined,
+    align = "left",
+    value = "",
+    presentValue = undefined,
+    width = "auto",
+    selectAll = false,
+    isEditing = $bindable(false),
+    onChange,
+    onFocusNext,
+    onFocusPrev,
+  }: Props = $props();
+  let inputValue = $state(value);
 
-	const dispatch = createEventDispatcher();
+  $effect(() => {
+    inputValue = value;
+  });
 
-	$: {
-		inputValue = value;
-	}
-
-	const onDone = () => {
-		isEditing = false;
-		dispatch('change', inputValue);
-	};
+  const onDone = () => {
+    isEditing = false;
+    onChange(inputValue);
+  };
 </script>
 
 {#if !isEditing}
-	<Cell {align} {pale} {colspan} on:dblclick={() => (isEditing = true)} {width}>
-		{presentValue ?? value}
-	</Cell>
+  <Cell {align} {pale} {colspan} onDbClick={() => (isEditing = true)} {width}>
+    {presentValue ?? value}
+  </Cell>
 {:else}
-	<InputCell
-		{align}
-		{width}
-		{selectAll}
-		autofocus
-		value={inputValue}
-		on:blur={onDone}
-		on:keydown={({ key, shiftKey }) => {
-			switch (key) {
-				case 'Enter':
-					onDone();
-					break;
-				case 'Escape':
-					isEditing = false;
-					break;
-				case 'Tab':
-					setTimeout(() => {
-						if (shiftKey) {
-							dispatch('focusprev');
-						} else {
-							dispatch('focusnext');
-						}
-					});
-					break;
-			}
-		}}
-		on:change={({ detail }) => (inputValue = detail)}
-	/>
+  <InputCell
+    {align}
+    {width}
+    {selectAll}
+    autofocus
+    value={inputValue}
+    onBlur={onDone}
+    onKeydown={({ key, shiftKey }) => {
+      switch (key) {
+        case "Enter":
+          onDone();
+          break;
+        case "Escape":
+          isEditing = false;
+          break;
+        case "Tab":
+          setTimeout(() => {
+            if (shiftKey) {
+              onFocusPrev();
+            } else {
+              onFocusNext();
+            }
+          });
+          break;
+      }
+    }}
+    onChange={(value) => (inputValue = value)}
+  />
 {/if}

@@ -1,6 +1,10 @@
 <script lang="ts">
-	export let src = '';
-	export let size = 30;
+	interface Props {
+		src?: string;
+		size?: number;
+	}
+
+	let { src = '', size = 30 }: Props = $props();
 </script>
 
 <div class="wrapper" style:--size="{size}px">
