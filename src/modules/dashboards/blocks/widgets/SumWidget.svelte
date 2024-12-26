@@ -18,9 +18,7 @@
     <div class="title">
       {title}
     </div>
-    {#if currentMonthSum}
-      <div class="value">{formatAmount(currentMonthSum)} {currency}</div>
-    {/if}
+    <div class="value">{formatAmount(currentMonthSum)} {currency}</div>
     <div
       class="footer"
       class:more={currentMonthSum > prevMonthSum}

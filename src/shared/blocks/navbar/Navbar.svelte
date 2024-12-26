@@ -52,6 +52,9 @@
     flex: 1;
     min-height: 0;
     padding-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-s);
   }
   nav {
     height: 100%;
