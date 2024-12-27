@@ -12,7 +12,10 @@
 
   let { value, onChange }: Props = $props();
 
-  const months = generateMonthsByYear(new Date().getFullYear());
+  const months = [
+    ...generateMonthsByYear(new Date().getFullYear()),
+    ...generateMonthsByYear(new Date().getFullYear() + 1),
+  ];
   const monthFormatter = Intl.DateTimeFormat(globalThis?.navigator?.language, {
     month: "long",
   });
@@ -86,6 +89,8 @@
     border: 1px solid var(--color-separator);
     box-shadow: var(--shadow-s);
     z-index: 100;
+    max-height: 400px;
+    overflow: auto;
 
     & li {
       & button {

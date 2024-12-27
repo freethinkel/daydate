@@ -1,8 +1,15 @@
 import { createEffect } from "effector";
 import type { BudgetEntry, Form } from "./types";
-import { exec, select } from "../base";
+import { db } from "../db/database";
+import { and, eq, gt, lt } from "drizzle-orm";
+import { budgetTable } from "../db/schema";
 
-const mapDbToModel = (entry: any): BudgetEntry => ({
+const mapDbToModel = (entry: {
+  date: number;
+  id: number;
+  name: string;
+  amount: number;
+}): BudgetEntry => ({
   ...entry,
   id: entry.id.toString(),
   date: new Date(entry.date),
@@ -28,28 +35,33 @@ export const loadBudgetFx = createEffect(async ({ month }: { month: Date }) => {
     0
   );
 
-  const res = (await select(
-    "SELECT * FROM budget WHERE date > date($1) AND date < date($2)",
-    [startOfMonth, endOfMonth]
-  )) as any[];
+  const res = await db.query.budgetTable.findMany({
+    where: and(
+      gt(budgetTable.date, startOfMonth.getTime()),
+      lt(budgetTable.date, endOfMonth.getTime())
+    ),
+  });
 
   return res.map(mapDbToModel);
 });
 
 export const createBudgetFx = createEffect<Form, BudgetEntry>(async (form) => {
-  const { lastInsertId } = await exec(
-    `INSERT into budget (name, amount, date) VALUES ($1, $2, $3)`,
-    [form.name, Math.abs(form.amount), new Date()]
-  );
-  const [newEntry] = (await select("SELECT * FROM budget WHERE id = $1", [
-    lastInsertId,
-  ])) as any[];
+  const [{ id }] = await db
+    .insert(budgetTable)
+    .values({
+      amount: Math.abs(form.amount),
+      name: form.name,
+      date: new Date().getTime(),
+    })
+    .returning();
 
-  console.log(newEntry);
+  const res = await db.query.budgetTable.findFirst({
+    where: eq(budgetTable.id, id),
+  });
 
-  return mapDbToModel(newEntry);
+  return mapDbToModel(res!);
 });
 
 export const deleteBudgetFx = createEffect(async (budget: BudgetEntry) => {
-  exec(`DELETE from budget WHERE id = $1`, [budget.id]);
+  await db.delete(budgetTable).where(eq(budgetTable.id, parseInt(budget.id)));
 });

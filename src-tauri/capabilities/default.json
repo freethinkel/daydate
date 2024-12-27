@@ -20,6 +20,10 @@
     "fs:write-all",
     "fs:write-files",
     "fs:allow-download-write",
+    "fs:allow-resource-read",
+    "fs:allow-resource-read-recursive",
+    "fs:allow-resource-write-recursive",
+    "fs:allow-resource-write",
     "fs:default",
     "dialog:default"
   ]

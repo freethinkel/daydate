@@ -15,7 +15,7 @@
   <Table>
     <Table.Header>
       <Table.Row>
-        <Table.Head width="60%">Name</Table.Head>
+        <Table.Head width="60%">Category</Table.Head>
         <Table.Head width="20%">Date</Table.Head>
         <Table.Head width="20%" align="right">Amount</Table.Head>
         <Table.Head width="10px"></Table.Head>
@@ -38,7 +38,7 @@
             <Button
               size="small"
               style="icon"
-              on:click={() => budgetModel.deleteBudget(row.id)}
+              onClick={() => budgetModel.deleteBudget(row.id)}
             >
               <Icon name="delete" size={16} />
             </Button>
@@ -55,6 +55,7 @@
           width="20%"
           align="right"
         />
+        <Table.Cell></Table.Cell>
       </Table.Row>
     </Table.Body>
   </Table>

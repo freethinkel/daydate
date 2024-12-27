@@ -5,13 +5,16 @@
   import { onMount } from "svelte";
   import { budgetModel, settingsModel, transactionsModel } from "@/model";
   import { accentColor } from "tauri-plugin-accent-color";
+  import { migrate } from "@/model/db/migrate";
   interface Props {
-    children?: import('svelte').Snippet;
+    children?: import("svelte").Snippet;
   }
 
   let { children }: Props = $props();
 
-  onMount(() => {
+  onMount(async () => {
+    await migrate();
+
     transactionsModel.loadTransactions();
     budgetModel.loadBudget();
     settingsModel.loadSettings();

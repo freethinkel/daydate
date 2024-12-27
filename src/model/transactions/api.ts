@@ -1,8 +1,15 @@
 import { createEffect } from "effector";
 import type { Form, TransactionEntry } from "./types";
-import { exec, select } from "../base";
+import { db } from "../db/database";
+import { transactionsTable } from "../db/schema";
+import { and, eq, gt, lt } from "drizzle-orm";
 
-const mapDbToModel = (entry: any): TransactionEntry => ({
+const mapDbToModel = (entry: {
+  date: number;
+  id: number;
+  name: string;
+  amount: number;
+}): TransactionEntry => ({
   ...entry,
   id: entry.id.toString(),
   date: new Date(entry.date),
@@ -28,10 +35,15 @@ const loadTransactions = async ({ month }: { month: Date }) => {
     0
   );
 
-  const res = (await select(
-    "SELECT * FROM transactions WHERE date > date($1) AND date < date($2)",
-    [startOfMonth, endOfMonth]
-  )) as any[];
+  const res = await db
+    .select()
+    .from(transactionsTable)
+    .where(
+      and(
+        gt(transactionsTable.date, startOfMonth.getTime()),
+        lt(transactionsTable.date, endOfMonth.getTime())
+      )
+    );
 
   return res.map(mapDbToModel);
 };
@@ -49,25 +61,32 @@ export const loadPrevMonthTransactionsFx = createEffect(
 
 export const createTransactionFx = createEffect<Form, TransactionEntry>(
   async (form) => {
-    const { lastInsertId } = await exec(
-      `insert into transactions (name, amount, date) values ($1, $2, $3)`,
-      [
-        form.name,
-        form.type === "income" ? Math.abs(form.amount) : -Math.abs(form.amount),
-        new Date(),
-      ]
-    );
-    const [newEntry] = (await select(
-      "SELECT * FROM transactions WHERE id = $1",
-      [lastInsertId]
-    )) as any[];
+    const [{ insertedId }] = await db
+      .insert(transactionsTable)
+      .values({
+        amount:
+          form.type === "income"
+            ? Math.abs(form.amount)
+            : -Math.abs(form.amount),
+        name: form.name,
+        date: new Date().getTime(),
+      })
+      .returning({
+        insertedId: transactionsTable.id,
+      });
 
-    return mapDbToModel(newEntry);
+    const res = await db.query.transactionsTable.findFirst({
+      where: eq(transactionsTable.id, insertedId),
+    });
+
+    return mapDbToModel(res!);
   }
 );
 
 export const deleteTransactionFx = createEffect(
   async (transaction: TransactionEntry) => {
-    exec(`DELETE from transactions WHERE id = $1`, [transaction.id]);
+    await db
+      .delete(transactionsTable)
+      .where(eq(transactionsTable.id, parseInt(transaction.id)));
   }
 );

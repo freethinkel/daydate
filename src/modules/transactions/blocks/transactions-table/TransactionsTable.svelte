@@ -101,6 +101,8 @@
           width="20%"
           align="right"
         />
+
+        <Table.Cell />
       </Table.Row>
     </Table.Body>
   </Table>
